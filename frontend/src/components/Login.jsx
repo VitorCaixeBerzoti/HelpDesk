@@ -4,13 +4,19 @@ function Login () {
     
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
+    const [erro, setErro] = useStatus('')
 
     function handleLogin(event) {
         event.preventDefault()
 
-        console.log(email)
+        if(email === '' || senha === '') {
+            setErro("Preencha todos os campos")
+            return
+        }
+        setErro('')
+        console.log(email) 
         console.log(senha)
-    }
+}
 
 
     return (
@@ -25,6 +31,7 @@ function Login () {
             value={senha}
             onChange={(event) => setSenha(event.target.value)}/>
             <button type="submit">Entrar</button>
+            <p>{erro}</p>
         </form>
         </>
     )
