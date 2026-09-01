@@ -27,6 +27,7 @@ function Login () {
             setSucesso('')
             return
         }
+        try{
             const response = await fetch('http://localhost:3000/login', {
                 method: 'POST',
                 headers: {
@@ -46,8 +47,12 @@ function Login () {
 
         setErro('')
         setSucesso(data.mensagem)
-
+    } catch (erro) {
+        setErro('Não foi possivel conectar ao servidor')
+        setSucesso('')
+    }
 }
+
 
 
     return (
