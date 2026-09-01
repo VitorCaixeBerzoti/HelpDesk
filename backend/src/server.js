@@ -23,6 +23,7 @@ app.post('/login', async (req, res) => {
             email
         }
     })
+
     
     if(!usuario) {
         return res.status(401).json({
@@ -42,6 +43,55 @@ app.post('/login', async (req, res) => {
         mensagem: 'Login realizado com sucesso'
     })
 })
+
+app.post('/usuarios', async (req, res) => {
+    const { nome, email, senha, cargo } = req.body
+    
+        if(!nome || !email || !senha) {
+            return res.status(400).json({
+                mensagem: 'Preencha todos os campos'
+            })
+        }
+    
+    const usuarioExistente = await prisma.usuario.findUnique({
+        where: {
+            email
+        }
+    })
+
+    if(usuarioExistente) {
+        return res.status(409).json({
+            mensagem: "Email já cadastrado"
+        })
+    }
+
+    const senhaHash = await bcrypt.hash(
+        senha,
+        10
+    )
+
+    const novoUsuario = await prisma.usuario.create({
+        data: {
+            nome: nome,
+            email: email,
+            senha: senhaHash
+        }
+    })
+
+    return res.status(201).json({
+        "mensagem": "recurso criado com sucesso",
+        "usuario": {
+            "id" : novoUsuario.id,
+            "nome" : novoUsuario.nome,
+            "email" : novoUsuario.email,
+            "cargo" : novoUsuario.cargo,
+            "dataDeCriacao" : novoUsuario.dataDeCricao
+        }
+    })
+        
+})
+
+
 
 app.listen(3000, () => {
     console.log('servidor rodando na porta 3000')
