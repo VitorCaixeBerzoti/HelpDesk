@@ -47,6 +47,7 @@ function Login () {
 
         setErro('')
         setSucesso(data.mensagem)
+        localStorage.setItem('token', data.token)
     } catch (erro) {
         setErro('Não foi possivel conectar ao servidor')
         setSucesso('')
