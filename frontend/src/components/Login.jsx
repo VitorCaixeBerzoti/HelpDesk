@@ -9,7 +9,7 @@ function Login () {
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] =useState('')
 
-    function handleLogin(event) {
+    async function handleLogin(event) {
         event.preventDefault()
 
         if(email === '' || senha === '') {
@@ -27,20 +27,32 @@ function Login () {
             setSucesso('')
             return
         }
-
-        const usuarioTeste = {
-            email: 'admin@helpdesk.com',
-            senha: '123456'
+        try{
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    senha
+                })
+            })
+            const data = await response.json()
+            if(!response.ok) {
+                setErro(data.mensagem)
+                setSucesso('')
+                return
             }
-        if ( email !== usuarioTeste.email|| senha !== usuarioTeste.senha) {
-            setErro("Email ou senha incorretos")
-            setSucesso('')
-            return
-        }
-        setErro('')
-        setSucesso('Login realizado com sucesso')
 
+        setErro('')
+        setSucesso(data.mensagem)
+    } catch (erro) {
+        setErro('Não foi possivel conectar ao servidor')
+        setSucesso('')
+    }
 }
+
 
 
     return (
