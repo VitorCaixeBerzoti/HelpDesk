@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Login.css'
 
 
@@ -8,6 +9,8 @@ function Login () {
     const [senha, setSenha] = useState('')
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] =useState('')
+
+    const navigate = useNavigate()
 
     async function handleLogin(event) {
         event.preventDefault()
@@ -48,7 +51,10 @@ function Login () {
         setErro('')
         setSucesso(data.mensagem)
         localStorage.setItem('token', data.token)
+        navigate('/dashboard')
     } catch (erro) {
+console.error(erro)
+
         setErro('Não foi possivel conectar ao servidor')
         setSucesso('')
     }
