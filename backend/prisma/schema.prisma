@@ -20,10 +20,23 @@ model Usuario {
   senha         String
   cargo         Cargo @default(USUARIO)
   dataDeCriacao DateTime @default(now())
+  chamados Chamado[]
 }
 
 enum Cargo {
   USUARIO
   TECNICO
   ADMIN
+}
+
+model Chamado {
+  id                    Int         @id @default(autoincrement())
+  usuarioId             Int
+  usuario               Usuario     @relation(fields: [usuarioId], references: [id])
+  titulo                String 
+  descricao             String
+  tipoAjuda             String
+  status                String      @default("ABERTO")
+  descricaoSolucao      String?
+  dataDeCriacao         DateTime    @default(now())
 }

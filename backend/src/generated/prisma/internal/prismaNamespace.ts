@@ -397,7 +397,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Usuario: 'Usuario'
+  Usuario: 'Usuario',
+  Chamado: 'Chamado'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario"
+    modelProps: "usuario" | "chamado"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -491,6 +492,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Chamado: {
+      payload: Prisma.$ChamadoPayload<ExtArgs>
+      fields: Prisma.ChamadoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChamadoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChamadoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>
+        }
+        findFirst: {
+          args: Prisma.ChamadoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChamadoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>
+        }
+        findMany: {
+          args: Prisma.ChamadoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>[]
+        }
+        create: {
+          args: Prisma.ChamadoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>
+        }
+        createMany: {
+          args: Prisma.ChamadoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ChamadoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>[]
+        }
+        delete: {
+          args: Prisma.ChamadoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>
+        }
+        update: {
+          args: Prisma.ChamadoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChamadoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChamadoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ChamadoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>[]
+        }
+        upsert: {
+          args: Prisma.ChamadoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChamadoPayload>
+        }
+        aggregate: {
+          args: Prisma.ChamadoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChamado>
+        }
+        groupBy: {
+          args: Prisma.ChamadoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChamadoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChamadoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChamadoCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -542,6 +617,20 @@ export const UsuarioScalarFieldEnum = {
 export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
 
 
+export const ChamadoScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  titulo: 'titulo',
+  descricao: 'descricao',
+  tipoAjuda: 'tipoAjuda',
+  status: 'status',
+  descricaoSolucao: 'descricaoSolucao',
+  dataDeCriacao: 'dataDeCriacao'
+} as const
+
+export type ChamadoScalarFieldEnum = (typeof ChamadoScalarFieldEnum)[keyof typeof ChamadoScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -556,6 +645,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -785,6 +882,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   usuario?: Prisma.UsuarioOmit
+  chamado?: Prisma.ChamadoOmit
 }
 
 /* Types for Logging */

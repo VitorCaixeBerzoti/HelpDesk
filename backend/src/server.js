@@ -139,7 +139,7 @@ app.post('/login', async (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-            expirensIn: '8h'
+            expiresIn: '8h'
         }
     )
     return res.status(200).json({
@@ -193,6 +193,53 @@ app.post('/usuarios', async (req, res) => {
         }
     })
         
+})
+
+app.post('/chamados', autenticarToken, async (req,res) => {
+    const { titulo, descricao, tipoAjuda } = req.body
+
+    if(!titulo || !descricao || !tipoAjuda) {
+        return res.status(400).json({
+            mensagem: "Preencha todos os campos"
+        })
+    }
+
+    const novoChamado = await prisma.chamado.create({
+        data: {
+            usuarioId: req.usuario.id,
+            titulo,
+            descricao,
+            tipoAjuda
+        }
+    })
+    return res.status(201).json({
+        mensagem: 'Chamado criado com sucesso',
+        chamado: novoChamado
+    })
+})
+
+app.get('/chamados', autenticarToken, async (req, res) => {
+    let chamados
+
+    if(req.usuario.cargo === 'USUARIO') {
+        chamados = await prisma.chamado.findMany({
+            where: {
+                usuarioId: req.usuario.id
+            }
+        })
+    } else {
+        chamados = await prisma.chamado.findMany()
+    }
+    chamados = await prisma.chamado.findMany({
+        where: {
+            usuarioId: req.usuario.id,
+        }
+    
+    })
+    return res.status(200).json({
+        chamados
+    })
+
 })
 
 
