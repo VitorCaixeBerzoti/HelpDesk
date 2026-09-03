@@ -296,6 +296,12 @@ app.patch('/chamados/:id', autenticarToken, async (req, res) => {
         })
     }
 
+    if (status === 'CONCLUIDO' && !descricaoSolucao) {
+        return res.status(400).json({
+            mensagem: 'Informe a solução do chamado'
+        })
+    }
+
     const chamadoAtualizado = await prisma.chamado.update({
         where: {
             id: chamadoId
@@ -320,6 +326,50 @@ app.patch('/chamados/:id', autenticarToken, async (req, res) => {
         mensagem: 'Chamado atualizado com sucesso',
         chamado: chamadoAtualizado
     })
+})
+
+app.patch('/chamados/:id/assumir', autenticarToken, async (req, res) => {
+    const { id } = req.params
+    const chamadoId = Number(id)
+    
+    if(req.usuario.cargo === 'USUARIO') {
+        return res.status(403).json({
+            mensagem: "Acesso negado"
+        })
+    }
+
+    const chamado = await prisma.chamado.findUnique({
+        where: {
+            id: chamadoId
+        }
+    })
+    
+    if (!chamado) {
+        return res.status(404).json({
+            mensagem: 'Chamado não encontrado'
+        })
+    }
+
+    if(chamado.tecnicoId) {
+        return res.status(400).json({
+            mensagem: 'Chamado já possui técnico responsável'
+        })
+    }
+
+    const chamadoAtualizado = await prisma.chamado.update({
+        where: {
+            id: chamadoId
+        }, 
+        data: {
+            tecnicoId: req.usuario.id
+        }
+    })
+
+    return res.status(200). json({
+        mensagem: 'Chamado assumido com sucesso',
+        chamado: chamadoAtualizado
+    })
+
 })
 
 app.listen(3000, () => {

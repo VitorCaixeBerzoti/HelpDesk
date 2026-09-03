@@ -224,7 +224,8 @@ export type UsuarioWhereInput = {
   senha?: Prisma.StringFilter<"Usuario"> | string
   cargo?: Prisma.EnumCargoFilter<"Usuario"> | $Enums.Cargo
   dataDeCriacao?: Prisma.DateTimeFilter<"Usuario"> | Date | string
-  chamados?: Prisma.ChamadoListRelationFilter
+  ChamadosSolicitados?: Prisma.ChamadoListRelationFilter
+  ChamadosAtendimentos?: Prisma.ChamadoListRelationFilter
 }
 
 export type UsuarioOrderByWithRelationInput = {
@@ -234,7 +235,8 @@ export type UsuarioOrderByWithRelationInput = {
   senha?: Prisma.SortOrder
   cargo?: Prisma.SortOrder
   dataDeCriacao?: Prisma.SortOrder
-  chamados?: Prisma.ChamadoOrderByRelationAggregateInput
+  ChamadosSolicitados?: Prisma.ChamadoOrderByRelationAggregateInput
+  ChamadosAtendimentos?: Prisma.ChamadoOrderByRelationAggregateInput
 }
 
 export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -247,7 +249,8 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   senha?: Prisma.StringFilter<"Usuario"> | string
   cargo?: Prisma.EnumCargoFilter<"Usuario"> | $Enums.Cargo
   dataDeCriacao?: Prisma.DateTimeFilter<"Usuario"> | Date | string
-  chamados?: Prisma.ChamadoListRelationFilter
+  ChamadosSolicitados?: Prisma.ChamadoListRelationFilter
+  ChamadosAtendimentos?: Prisma.ChamadoListRelationFilter
 }, "id" | "email">
 
 export type UsuarioOrderByWithAggregationInput = {
@@ -282,7 +285,8 @@ export type UsuarioCreateInput = {
   senha: string
   cargo?: $Enums.Cargo
   dataDeCriacao?: Date | string
-  chamados?: Prisma.ChamadoCreateNestedManyWithoutUsuarioInput
+  ChamadosSolicitados?: Prisma.ChamadoCreateNestedManyWithoutUsuarioInput
+  ChamadosAtendimentos?: Prisma.ChamadoCreateNestedManyWithoutTecnicoInput
 }
 
 export type UsuarioUncheckedCreateInput = {
@@ -292,7 +296,8 @@ export type UsuarioUncheckedCreateInput = {
   senha: string
   cargo?: $Enums.Cargo
   dataDeCriacao?: Date | string
-  chamados?: Prisma.ChamadoUncheckedCreateNestedManyWithoutUsuarioInput
+  ChamadosSolicitados?: Prisma.ChamadoUncheckedCreateNestedManyWithoutUsuarioInput
+  ChamadosAtendimentos?: Prisma.ChamadoUncheckedCreateNestedManyWithoutTecnicoInput
 }
 
 export type UsuarioUpdateInput = {
@@ -301,7 +306,8 @@ export type UsuarioUpdateInput = {
   senha?: Prisma.StringFieldUpdateOperationsInput | string
   cargo?: Prisma.EnumCargoFieldUpdateOperationsInput | $Enums.Cargo
   dataDeCriacao?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  chamados?: Prisma.ChamadoUpdateManyWithoutUsuarioNestedInput
+  ChamadosSolicitados?: Prisma.ChamadoUpdateManyWithoutUsuarioNestedInput
+  ChamadosAtendimentos?: Prisma.ChamadoUpdateManyWithoutTecnicoNestedInput
 }
 
 export type UsuarioUncheckedUpdateInput = {
@@ -311,7 +317,8 @@ export type UsuarioUncheckedUpdateInput = {
   senha?: Prisma.StringFieldUpdateOperationsInput | string
   cargo?: Prisma.EnumCargoFieldUpdateOperationsInput | $Enums.Cargo
   dataDeCriacao?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  chamados?: Prisma.ChamadoUncheckedUpdateManyWithoutUsuarioNestedInput
+  ChamadosSolicitados?: Prisma.ChamadoUncheckedUpdateManyWithoutUsuarioNestedInput
+  ChamadosAtendimentos?: Prisma.ChamadoUncheckedUpdateManyWithoutTecnicoNestedInput
 }
 
 export type UsuarioCreateManyInput = {
@@ -380,6 +387,11 @@ export type UsuarioScalarRelationFilter = {
   isNot?: Prisma.UsuarioWhereInput
 }
 
+export type UsuarioNullableScalarRelationFilter = {
+  is?: Prisma.UsuarioWhereInput | null
+  isNot?: Prisma.UsuarioWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -400,68 +412,142 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type UsuarioCreateNestedOneWithoutChamadosInput = {
-  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosInput>
-  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutChamadosInput
+export type UsuarioCreateNestedOneWithoutChamadosSolicitadosInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosSolicitadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosSolicitadosInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutChamadosSolicitadosInput
   connect?: Prisma.UsuarioWhereUniqueInput
 }
 
-export type UsuarioUpdateOneRequiredWithoutChamadosNestedInput = {
-  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosInput>
-  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutChamadosInput
-  upsert?: Prisma.UsuarioUpsertWithoutChamadosInput
+export type UsuarioCreateNestedOneWithoutChamadosAtendimentosInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosAtendimentosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosAtendimentosInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutChamadosAtendimentosInput
   connect?: Prisma.UsuarioWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutChamadosInput, Prisma.UsuarioUpdateWithoutChamadosInput>, Prisma.UsuarioUncheckedUpdateWithoutChamadosInput>
 }
 
-export type UsuarioCreateWithoutChamadosInput = {
+export type UsuarioUpdateOneRequiredWithoutChamadosSolicitadosNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosSolicitadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosSolicitadosInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutChamadosSolicitadosInput
+  upsert?: Prisma.UsuarioUpsertWithoutChamadosSolicitadosInput
+  connect?: Prisma.UsuarioWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutChamadosSolicitadosInput, Prisma.UsuarioUpdateWithoutChamadosSolicitadosInput>, Prisma.UsuarioUncheckedUpdateWithoutChamadosSolicitadosInput>
+}
+
+export type UsuarioUpdateOneWithoutChamadosAtendimentosNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosAtendimentosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosAtendimentosInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutChamadosAtendimentosInput
+  upsert?: Prisma.UsuarioUpsertWithoutChamadosAtendimentosInput
+  disconnect?: Prisma.UsuarioWhereInput | boolean
+  delete?: Prisma.UsuarioWhereInput | boolean
+  connect?: Prisma.UsuarioWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutChamadosAtendimentosInput, Prisma.UsuarioUpdateWithoutChamadosAtendimentosInput>, Prisma.UsuarioUncheckedUpdateWithoutChamadosAtendimentosInput>
+}
+
+export type UsuarioCreateWithoutChamadosSolicitadosInput = {
   nome: string
   email: string
   senha: string
   cargo?: $Enums.Cargo
   dataDeCriacao?: Date | string
+  ChamadosAtendimentos?: Prisma.ChamadoCreateNestedManyWithoutTecnicoInput
 }
 
-export type UsuarioUncheckedCreateWithoutChamadosInput = {
+export type UsuarioUncheckedCreateWithoutChamadosSolicitadosInput = {
   id?: number
   nome: string
   email: string
   senha: string
   cargo?: $Enums.Cargo
   dataDeCriacao?: Date | string
+  ChamadosAtendimentos?: Prisma.ChamadoUncheckedCreateNestedManyWithoutTecnicoInput
 }
 
-export type UsuarioCreateOrConnectWithoutChamadosInput = {
+export type UsuarioCreateOrConnectWithoutChamadosSolicitadosInput = {
   where: Prisma.UsuarioWhereUniqueInput
-  create: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosSolicitadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosSolicitadosInput>
 }
 
-export type UsuarioUpsertWithoutChamadosInput = {
-  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutChamadosInput, Prisma.UsuarioUncheckedUpdateWithoutChamadosInput>
-  create: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosInput>
+export type UsuarioCreateWithoutChamadosAtendimentosInput = {
+  nome: string
+  email: string
+  senha: string
+  cargo?: $Enums.Cargo
+  dataDeCriacao?: Date | string
+  ChamadosSolicitados?: Prisma.ChamadoCreateNestedManyWithoutUsuarioInput
+}
+
+export type UsuarioUncheckedCreateWithoutChamadosAtendimentosInput = {
+  id?: number
+  nome: string
+  email: string
+  senha: string
+  cargo?: $Enums.Cargo
+  dataDeCriacao?: Date | string
+  ChamadosSolicitados?: Prisma.ChamadoUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type UsuarioCreateOrConnectWithoutChamadosAtendimentosInput = {
+  where: Prisma.UsuarioWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosAtendimentosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosAtendimentosInput>
+}
+
+export type UsuarioUpsertWithoutChamadosSolicitadosInput = {
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutChamadosSolicitadosInput, Prisma.UsuarioUncheckedUpdateWithoutChamadosSolicitadosInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosSolicitadosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosSolicitadosInput>
   where?: Prisma.UsuarioWhereInput
 }
 
-export type UsuarioUpdateToOneWithWhereWithoutChamadosInput = {
+export type UsuarioUpdateToOneWithWhereWithoutChamadosSolicitadosInput = {
   where?: Prisma.UsuarioWhereInput
-  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutChamadosInput, Prisma.UsuarioUncheckedUpdateWithoutChamadosInput>
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutChamadosSolicitadosInput, Prisma.UsuarioUncheckedUpdateWithoutChamadosSolicitadosInput>
 }
 
-export type UsuarioUpdateWithoutChamadosInput = {
+export type UsuarioUpdateWithoutChamadosSolicitadosInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   senha?: Prisma.StringFieldUpdateOperationsInput | string
   cargo?: Prisma.EnumCargoFieldUpdateOperationsInput | $Enums.Cargo
   dataDeCriacao?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ChamadosAtendimentos?: Prisma.ChamadoUpdateManyWithoutTecnicoNestedInput
 }
 
-export type UsuarioUncheckedUpdateWithoutChamadosInput = {
+export type UsuarioUncheckedUpdateWithoutChamadosSolicitadosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   senha?: Prisma.StringFieldUpdateOperationsInput | string
   cargo?: Prisma.EnumCargoFieldUpdateOperationsInput | $Enums.Cargo
   dataDeCriacao?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ChamadosAtendimentos?: Prisma.ChamadoUncheckedUpdateManyWithoutTecnicoNestedInput
+}
+
+export type UsuarioUpsertWithoutChamadosAtendimentosInput = {
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutChamadosAtendimentosInput, Prisma.UsuarioUncheckedUpdateWithoutChamadosAtendimentosInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutChamadosAtendimentosInput, Prisma.UsuarioUncheckedCreateWithoutChamadosAtendimentosInput>
+  where?: Prisma.UsuarioWhereInput
+}
+
+export type UsuarioUpdateToOneWithWhereWithoutChamadosAtendimentosInput = {
+  where?: Prisma.UsuarioWhereInput
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutChamadosAtendimentosInput, Prisma.UsuarioUncheckedUpdateWithoutChamadosAtendimentosInput>
+}
+
+export type UsuarioUpdateWithoutChamadosAtendimentosInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  cargo?: Prisma.EnumCargoFieldUpdateOperationsInput | $Enums.Cargo
+  dataDeCriacao?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ChamadosSolicitados?: Prisma.ChamadoUpdateManyWithoutUsuarioNestedInput
+}
+
+export type UsuarioUncheckedUpdateWithoutChamadosAtendimentosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  cargo?: Prisma.EnumCargoFieldUpdateOperationsInput | $Enums.Cargo
+  dataDeCriacao?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ChamadosSolicitados?: Prisma.ChamadoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 
@@ -470,11 +556,13 @@ export type UsuarioUncheckedUpdateWithoutChamadosInput = {
  */
 
 export type UsuarioCountOutputType = {
-  chamados: number
+  ChamadosSolicitados: number
+  ChamadosAtendimentos: number
 }
 
 export type UsuarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  chamados?: boolean | UsuarioCountOutputTypeCountChamadosArgs
+  ChamadosSolicitados?: boolean | UsuarioCountOutputTypeCountChamadosSolicitadosArgs
+  ChamadosAtendimentos?: boolean | UsuarioCountOutputTypeCountChamadosAtendimentosArgs
 }
 
 /**
@@ -490,7 +578,14 @@ export type UsuarioCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * UsuarioCountOutputType without action
  */
-export type UsuarioCountOutputTypeCountChamadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UsuarioCountOutputTypeCountChamadosSolicitadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChamadoWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountChamadosAtendimentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ChamadoWhereInput
 }
 
@@ -502,7 +597,8 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   senha?: boolean
   cargo?: boolean
   dataDeCriacao?: boolean
-  chamados?: boolean | Prisma.Usuario$chamadosArgs<ExtArgs>
+  ChamadosSolicitados?: boolean | Prisma.Usuario$ChamadosSolicitadosArgs<ExtArgs>
+  ChamadosAtendimentos?: boolean | Prisma.Usuario$ChamadosAtendimentosArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuario"]>
 
@@ -535,7 +631,8 @@ export type UsuarioSelectScalar = {
 
 export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "email" | "senha" | "cargo" | "dataDeCriacao", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  chamados?: boolean | Prisma.Usuario$chamadosArgs<ExtArgs>
+  ChamadosSolicitados?: boolean | Prisma.Usuario$ChamadosSolicitadosArgs<ExtArgs>
+  ChamadosAtendimentos?: boolean | Prisma.Usuario$ChamadosAtendimentosArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsuarioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -544,7 +641,8 @@ export type UsuarioIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Usuario"
   objects: {
-    chamados: Prisma.$ChamadoPayload<ExtArgs>[]
+    ChamadosSolicitados: Prisma.$ChamadoPayload<ExtArgs>[]
+    ChamadosAtendimentos: Prisma.$ChamadoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -947,7 +1045,8 @@ readonly fields: UsuarioFieldRefs;
  */
 export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  chamados<T extends Prisma.Usuario$chamadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$chamadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChamadoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ChamadosSolicitados<T extends Prisma.Usuario$ChamadosSolicitadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$ChamadosSolicitadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChamadoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ChamadosAtendimentos<T extends Prisma.Usuario$ChamadosAtendimentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$ChamadosAtendimentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChamadoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1376,9 +1475,33 @@ export type UsuarioDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Usuario.chamados
+ * Usuario.ChamadosSolicitados
  */
-export type Usuario$chamadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Usuario$ChamadosSolicitadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Chamado
+   */
+  select?: Prisma.ChamadoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Chamado
+   */
+  omit?: Prisma.ChamadoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChamadoInclude<ExtArgs> | null
+  where?: Prisma.ChamadoWhereInput
+  orderBy?: Prisma.ChamadoOrderByWithRelationInput | Prisma.ChamadoOrderByWithRelationInput[]
+  cursor?: Prisma.ChamadoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChamadoScalarFieldEnum | Prisma.ChamadoScalarFieldEnum[]
+}
+
+/**
+ * Usuario.ChamadosAtendimentos
+ */
+export type Usuario$ChamadosAtendimentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Chamado
    */

@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
   importFileExtension = "ts"
 }
 
@@ -14,13 +14,14 @@ datasource db {
 }
 
 model Usuario {
-  id            Int @id @default(autoincrement())
-  nome          String 
-  email         String @unique
-  senha         String
-  cargo         Cargo @default(USUARIO)
-  dataDeCriacao DateTime @default(now())
-  chamados Chamado[]
+  id                   Int       @id @default(autoincrement())
+  nome                 String
+  email                String    @unique
+  senha                String
+  cargo                Cargo     @default(USUARIO)
+  dataDeCriacao        DateTime  @default(now())
+  ChamadosSolicitados  Chamado[] @relation("ChamadosSolicitados")
+  ChamadosAtendimentos Chamado[] @relation("ChamadosAtendimentos")
 }
 
 enum Cargo {
@@ -30,13 +31,15 @@ enum Cargo {
 }
 
 model Chamado {
-  id                    Int         @id @default(autoincrement())
-  usuarioId             Int
-  usuario               Usuario     @relation(fields: [usuarioId], references: [id])
-  titulo                String 
-  descricao             String
-  tipoAjuda             String
-  status                String      @default("ABERTO")
-  descricaoSolucao      String?
-  dataDeCriacao         DateTime    @default(now())
+  id               Int      @id @default(autoincrement())
+  usuarioId        Int
+  usuario          Usuario  @relation("ChamadosSolicitados", fields: [usuarioId], references: [id])
+  tecnicoId        Int?
+  tecnico          Usuario? @relation("ChamadosAtendimentos", fields: [tecnicoId], references: [id])
+  titulo           String
+  descricao        String
+  tipoAjuda        String
+  status           String   @default("ABERTO")
+  descricaoSolucao String?
+  dataDeCriacao    DateTime @default(now())
 }

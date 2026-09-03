@@ -620,6 +620,7 @@ export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeo
 export const ChamadoScalarFieldEnum = {
   id: 'id',
   usuarioId: 'usuarioId',
+  tecnicoId: 'tecnicoId',
   titulo: 'titulo',
   descricao: 'descricao',
   tipoAjuda: 'tipoAjuda',
