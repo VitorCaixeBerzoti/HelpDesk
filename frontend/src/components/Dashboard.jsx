@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import './Dashboard.css'
 
 
 function Dashboard() {
   const navigate = useNavigate()
-  const [chamados, setChamados] = useState([
+  const [chamados, setChamados] = useState([])
     
     useEffect(() => {
 
@@ -19,26 +20,62 @@ function Dashboard() {
         })
 
         const data = await response.json()
-          setChamados(data.chamados)
 
+        setChamados(data.chamados)
       }
 
       buscarChamados()
 
   }, [])
-])
   
   function handleLogout() {
     localStorage.removeItem('token')
     navigate('/login')
   }
-    
-    return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Bem-vindo ao HelpDesk</p>
 
-      <button onClick={handleLogout}>Sair</button>
+  
+  return (
+    <div className='dashboard'>
+
+      <div className='dashboard-header'>
+        <div>
+          <h1>Dashboard</h1>
+          <p>Bem-vindo ao HelpDesk</p>
+        </div>
+
+
+        <div>
+          <button onClick={() => navigate('/chamados/novo')}>
+            Novo chamado
+          </button>
+
+          <button onClick={handleLogout}>
+            Sair
+          </button>
+        </div>
+      </div>
+
+      {chamados.length === 0 && (
+        <p>Nenhum chamado encontrado.</p>
+      )}
+
+      <h2>Chamados</h2>
+          
+      {chamados.map((chamado, index) => {
+
+        return (
+          <div className='chamado-card' key={chamado.id}>
+            <h3>{chamado.titulo}</h3>
+            <p>{chamado.descricao}</p>
+            <p>Tipo: {chamado.tipoAjuda}</p>
+            <p>Status: {chamado.status}</p>
+            <p>
+              Criado em: {new Date(chamado.dataDeCriacao).toLocaleString('pt-BR')}
+            </p>
+          </div>
+        )
+      })}
+
     </div>
   )
 }

@@ -236,6 +236,7 @@ app.get('/chamados', autenticarToken, async (req, res) => {
         }
     
     })
+
     return res.status(200).json({
         chamados
     })
