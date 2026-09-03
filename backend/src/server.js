@@ -255,13 +255,13 @@ app.get('/chamados/:id', autenticarToken, async (req, res) => {
     })
     if (!chamado) {
         return res.status(404).json({
-            mensagem: "Chamado não encontra"
+            mensagem: "Chamado não encontrado"
         })
     }
 
     if (
         req.usuario.cargo === 'USUARIO' &&
-        chamado.usuarioID !== req.usuario.id
+        chamado.usuarioId !== req.usuario.id
     ) {
         return res.status(403).json({
             mensagem: "Acesso negado"
@@ -269,6 +269,56 @@ app.get('/chamados/:id', autenticarToken, async (req, res) => {
     }
     return res.status(200).json({
         chamado
+    })
+})
+
+app.patch('/chamados/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params
+    const chamadoId = Number(id)
+    const { status, descricaoSolucao } = req.body
+    const statusPermitidos = ['ABERTO', 'FECHADO', 'CONCLUIDO']
+
+    if(status && !statusPermitidos.includes(status)) {
+        return res.status(400).json({
+            mensagem: "Status inválido"
+        })
+    }
+
+    const chamado = await prisma.chamado.findUnique({
+        where: {
+            id: chamadoId
+        }
+    })
+
+    if (!chamado) {
+        return res.status(404).json({
+            mensagem: "Chamado não encontrado"
+        })
+    }
+
+    const chamadoAtualizado = await prisma.chamado.update({
+        where: {
+            id: chamadoId
+        },
+        data: {
+            status,
+            descricaoSolucao
+        }
+
+    })
+    
+    if (
+        req.usuario.cargo === 'USUARIO' &&
+        chamado.usuarioId !== req.usuario.id
+    ) {
+        return res.status(403).json({
+            mensagem: "Acesso negado"
+        })
+    }
+
+    return res.status(200).json({
+        mensagem: 'Chamado atualizado com sucesso',
+        chamado: chamadoAtualizado
     })
 })
 
