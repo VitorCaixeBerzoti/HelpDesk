@@ -24,6 +24,13 @@ function App () {
           </RotaProtegida>
         }
         ></Route>
+        <Router path="/chamados/:id"
+        element={
+          <RotaProtegida>
+            <DetalhesChamado />
+          </RotaProtegida>
+        }
+        ></Router>
       </Routes>
     </BrowserRouter>
   )

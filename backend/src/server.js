@@ -243,7 +243,34 @@ app.get('/chamados', autenticarToken, async (req, res) => {
 
 })
 
+app.get('/chamados/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params
+    const chamadoId = Number(id)
 
+    const chamado = await prisma.chamado.findUnique({
+        where: {
+            id: chamadoId
+        }
+
+    })
+    if (!chamado) {
+        return res.status(404).json({
+            mensagem: "Chamado não encontra"
+        })
+    }
+
+    if (
+        req.usuario.cargo === 'USUARIO' &&
+        chamado.usuarioID !== req.usuario.id
+    ) {
+        return res.status(403).json({
+            mensagem: "Acesso negado"
+        })
+    }
+    return res.status(200).json({
+        chamado
+    })
+})
 
 app.listen(3000, () => {
     console.log('servidor rodando na porta 3000')
