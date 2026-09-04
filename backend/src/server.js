@@ -225,6 +225,23 @@ app.get('/chamados', autenticarToken, async (req, res) => {
         chamados = await prisma.chamado.findMany({
             where: {
                 usuarioId: req.usuario.id
+            },
+            include: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nome: true
+                    }
+                },
+                tecnico: {
+                    select: {
+                        id: true,
+                        nome: true
+                    }
+                }
+            },
+            orderBy: {
+                dataDeCriacao: 'desc'
             }
         })
     } else {
@@ -233,6 +250,23 @@ app.get('/chamados', autenticarToken, async (req, res) => {
     chamados = await prisma.chamado.findMany({
         where: {
             usuarioId: req.usuario.id,
+        },
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nome: true
+                }
+            },
+            tecnico: {
+                select: {
+                    id: true,
+                    nome: true
+                }
+            }
+        },
+        orderBy: {
+            dataDeCriacao: 'desc'
         }
     
     })
@@ -287,6 +321,22 @@ app.patch('/chamados/:id', autenticarToken, async (req, res) => {
     const chamado = await prisma.chamado.findUnique({
         where: {
             id: chamadoId
+        },
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true
+                }
+            },
+            tecnico: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true
+                }
+            }
         }
     })
 
@@ -370,6 +420,44 @@ app.patch('/chamados/:id/assumir', autenticarToken, async (req, res) => {
         chamado: chamadoAtualizado
     })
 
+})
+
+app.get('/usuarios', autenticarToken, autorizarAdmin, async (req, res) => {
+    const { nome, email, senha, cargo } = req.body
+
+    const cargosPermitidos = ['USUARIO', 'TECNICO', 'ADMIN']
+
+    if (cargo && !cargosPermitidos.includes(cargo)) {
+        return res.status(400).json({
+            mensagem: 'Cargo inválido'
+        })
+    }
+
+    const novoUsuario = await prisma.usuario.create({
+        data: {
+            nome,
+            email,
+            senha: senhaHash,
+            cargo: cargo || 'USUARIO'
+        }
+    })
+
+    const usuarios = await prisma.usuario.findMany({
+        select: {
+            id: true,
+            nome: true,
+            email: true,
+            cargo: true,
+            dataDeCriacao: true
+        },
+        orderBy: {
+            nome: 'asc'
+        }
+    })
+
+    return res.status(200).json({
+        usuarios
+    })
 })
 
 app.listen(3000, () => {

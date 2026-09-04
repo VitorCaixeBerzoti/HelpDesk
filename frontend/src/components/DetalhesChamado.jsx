@@ -125,6 +125,14 @@ function DetalhesChamado() {
         Criado em: {new Date(chamado.dataDeCriacao).toLocaleString('pt-BR')}
       </p>
 
+      <p>
+        Solicitante: {chamado.usuario.nome}
+      </p>
+
+      <p>
+        Técnico responsável: {chamado.tecnico ? chamado.tecnico.nome : 'Não atribuído'}
+      </p>
+
       {chamado.descricaoSolucao && (
         <p>
           Solução: {chamado.descricaoSolucao}

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './components/Login.jsx'
 import Dashboard from './components/Dashboard.jsx'
 import NovoChamado from './components/NovoChamado.jsx'
+import Usuarios from './components/Usuarios.jsx'
 
 function App () {
   return (
@@ -30,7 +31,15 @@ function App () {
             <DetalhesChamado />
           </RotaProtegida>
         }
-        ></Router>
+        />
+        <Route 
+          path='/usuario'
+          element={
+            <RotaProtegida>
+              <Usuarios />
+            </RotaProtegida>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )

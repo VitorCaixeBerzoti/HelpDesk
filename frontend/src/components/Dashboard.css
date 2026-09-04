@@ -30,3 +30,35 @@
     margin-top: 0;
     cursor: pointer;
 }
+
+.dashboard-resumo {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dashboard-resumo > div {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dashboard-resumo strong {
+    font-size: 28px;
+}
+
+.dashboard-resumo span {
+    font-size: 14px;
+}
+
+.dashboard select {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}

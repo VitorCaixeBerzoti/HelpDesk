@@ -5,6 +5,10 @@ import './Dashboard.css'
 function Dashboard() {
   const navigate = useNavigate()
   const [chamados, setChamados] = useState([])
+  const [filtroStatus, setFiltroStatus] = useState('TODOS')
+  const [buscar, setBusca] = useState('')
+  const [filtroTipo, setFiltroTipo] = useState('TODOS')
+  const [usuarios, setUsuario] = useState(null)
 
   useEffect(() => {
     async function buscarChamados() {
@@ -26,13 +30,54 @@ function Dashboard() {
       setChamados(data.chamados || [])
     }
 
+    async function buscarPerfil() {
+      const token = localStorage.getItem("token")
+  
+      const response = await fetch('http://localhoste:300/perfil', {
+        headers: {
+          Autorization: `Bearer ${token}`
+        }
+      })
+  
+      const data = await response.json()
+  
+      if(response.ok) {
+        setUsuario(data.usuario)
+      }
+    }
+  
+    buscarPerfil()
     buscarChamados()
   }, [])
+
 
   function handleLogout() {
     localStorage.removeItem('token')
     navigate('/login')
   }
+
+  const chamadosFiltrados = chamados.filter((chamado) =>  {
+    const combinaStatus = filtroStatus === "TODOS" || chamado.status === filtroStatus
+
+    const combinaTipo = filtroTipo === 'TODOS' || chamado.tipoAjuda === filtroTipo
+
+    const combinaBusca = chamado.titulo.toLowerCase().include(buscar.toLowerCase())
+
+    return combinaStatus && combinaTipo && combinaBusca
+  })
+  const totalChamados = chamados.length
+
+  const totalAbertos = chamados.filter(
+    (chamado) => chamado.status === 'ABERTO'
+  ).length
+
+  const totalFechados = chamados.filter(
+    (chamado) => chamado.status === 'FECHADO'
+  ).length
+
+  const totalConcluidos = chamados.filter(
+    (chamado) => chamado.status === 'CONCLUIDO'
+  ).length
 
   return (
     <div className="dashboard">
@@ -48,6 +93,12 @@ function Dashboard() {
             Novo chamado
           </button>
 
+        {usuario?.cargo === 'ADMIN' && (
+          <button onClick={() => navigate('/usuarios')}>
+            Gerenciar usuários
+          </button>
+        )}
+
           <button onClick={handleLogout}>
             Sair
           </button>
@@ -56,20 +107,81 @@ function Dashboard() {
 
       <h2>Chamados</h2>
 
+      <input 
+        type="text"
+        placeholder="Buscar chamado..."
+        value={buscar}
+        onChange={(event) > setBusca(event.target.value)}
+      />
+
+      <select
+      value={filtroStatus}
+      onChange={(event) => setFiltroStatus(event.target.value)}
+      >
+        <option value="TODOS">Todos</option>
+        <option value="ABERTO">Abertos</option>
+        <option value="FECHADO">Fechados</option>
+        <option value="CONCLUIDO">Concluídos</option>
+      </select>
+
+      <select
+        value={filtroTipo}
+        onChanges={(event) => setFiltroTipo(event.target.value)}
+      >
+        <option value="TODOS">Todos os tipos</option>
+        <option value="Hardware">Hardware</option>
+        <option value="Software">Software</option>
+        <option value="Rede">Rede</option>
+        <option value="Outro">Outro</option>
+      </select>
+
       {chamados.length === 0 && (
         <p>Nenhum chamado encontrado.</p>
       )}
 
-      {chamados.map((chamado) => {
+
+
+      {chamadosFiltrados.map((chamado) => {
         return (
           <div
             className="chamado-card"
             key={chamado.id}
             onClick={() => navigate(`/chamados/${chamado.id}`)}
           >
+
+          <div className="dashboard-resumo">
+            <div>
+              <strong>{totalChamados}</strong>
+              <span>Total</span>
+            </div>
+
+            <div>
+              <strong>{totalAbertos}</strong>
+              <span>Abertos</span>
+            </div>
+
+            <div>
+              <strong>{totalFechados}</strong>
+              <span>Fechados</span>
+            </div>
+
+            <div>
+              <strong>{totalConcluidos}</strong>
+              <span>Concluídos</span>
+            </div>
+          </div>
+
             <h3>{chamado.titulo}</h3>
 
             <p>{chamado.descricao}</p>
+
+            <p>
+              Solicitante: {chamado.usuario.nome}
+            </p>
+
+            <p>
+              Técnico: {chamado.tecnico ? chamado.tecnico.nome : 'Não atribuído'}
+            </p>
 
             <p>
               Tipo: {chamado.tipoAjuda}
