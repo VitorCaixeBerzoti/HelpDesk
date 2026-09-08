@@ -97,23 +97,23 @@ HelpDesk/
 
 ### Login
 
-![Tela de Login](docs/images/login.png)
+![Tela de Login](docs/images/Tela_de_Login.png)
 
 ### Dashboard
 
-![Dashboard](docs/images/dashboard.png)
+![Dashboard](docs/images/Dashboard.png)
 
 ### Novo chamado
 
-![Novo Chamado](docs/images/novo-chamado.png)
+![Novo Chamado](docs/images/NovoChamado.png)
 
 ### Detalhes do chamado
 
-![Detalhes do Chamado](docs/images/detalhes-chamado.png)
+![Detalhes do Chamado](docs/images/Detalhes_do_Chamado.png)
 
 ### Gerenciamento de usuários
 
-![Gerenciamento de Usuários](docs/images/usuarios.png)
+![Gerenciamento de Usuários](docs/images/Gerenciamento_de_Usuario.png)
 
 ## Como executar o projeto
 
