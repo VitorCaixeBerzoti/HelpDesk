@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Usuarios.css'
+import { API_URL } from '../config/api.js'
 
 function Usuarios() {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ function Usuarios() {
       const token = localStorage.getItem('token')
 
       const response = await fetch(
-        'http://localhost:3000/usuarios',
+        `${API_URL}/usuarios`,
         {
           headers: {
             Authorization: `Bearer ${token}`

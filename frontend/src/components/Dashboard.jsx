@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import './Dashboard.css'
+import { API_URL } from '../config/api.js'
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ function Dashboard() {
         const token = localStorage.getItem('token')
 
         const response = await fetch(
-          'http://localhost:3000/chamados',
+          `${API_URL}/chamados`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -57,7 +58,7 @@ function Dashboard() {
         const token = localStorage.getItem('token')
 
         const response = await fetch(
-          'http://localhost:3000/perfil',
+          `${API_URL}/perfil`,
           {
             headers: {
               Authorization: `Bearer ${token}`

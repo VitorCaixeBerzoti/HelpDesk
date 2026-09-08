@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './NovoChamado.css'
+import { API_URL } from '../config/api.js'
 
 function NovoChamado() {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ function NovoChamado() {
       const token = localStorage.getItem('token')
 
       const response = await fetch(
-        'http://localhost:3000/chamados',
+        `${API_URL}/chamados`,
         {
           method: 'POST',
           headers: {

@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api.js'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Login.css'
@@ -36,7 +37,7 @@ function Login() {
       setEntrando(true)
 
       const response = await fetch(
-        'http://localhost:3000/login',
+        `${API_URL}/login`,
         {
           method: 'POST',
           headers: {

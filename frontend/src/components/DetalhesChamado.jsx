@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import './DetalhesChamado.css'
+import { API_URL } from '../config/api.js'
 
 function DetalhesChamado() {
   const { id } = useParams()
@@ -25,7 +26,7 @@ function DetalhesChamado() {
       const token = localStorage.getItem('token')
 
       const responsePerfil = await fetch(
-        'http://localhost:3000/perfil',
+        `${API_URL}/perfil`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -40,7 +41,7 @@ function DetalhesChamado() {
       }
 
       const response = await fetch(
-        `http://localhost:3000/chamados/${id}`,
+        `${API_URL}/chamados/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -80,7 +81,7 @@ function DetalhesChamado() {
       const token = localStorage.getItem('token')
 
       const response = await fetch(
-        `http://localhost:3000/chamados/${id}`,
+        `${API_URL}/chamados/${id}`,
         {
           method: 'PATCH',
           headers: {

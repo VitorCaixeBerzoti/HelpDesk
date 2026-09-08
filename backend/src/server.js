@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { prisma } from './lib/prisma.js'
@@ -6,8 +7,13 @@ import jwt from 'jsonwebtoken'
 
 const app = express()
 
+const origensPermitidas = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL
+].filter(Boolean)
+
 app.use(cors({
-    origin: 'http://localhost:5173'
+  origin: origensPermitidas
 }))
 
 app.use(express.json())
@@ -460,6 +466,8 @@ app.get('/usuarios', autenticarToken, autorizarAdmin, async (req, res) => {
     })
 })
 
-app.listen(3000, () => {
-    console.log('servidor rodando na porta 3000')
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`)
 })
