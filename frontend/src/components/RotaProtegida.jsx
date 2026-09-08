@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { API_URL } from '../config/api.js'
 
 function RotaProtegida({ children }) {
     const [autenticado, setAutenticado] = useState(null)
@@ -13,7 +14,7 @@ function RotaProtegida({ children }) {
                 return <Navigate to="/login" replace />
             }
 
-            const response = await fetch('http://localhost:3000/perfil', {
+            const response = await fetch(`${API_URL}/perfil`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
