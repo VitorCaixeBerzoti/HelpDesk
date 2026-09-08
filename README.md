@@ -97,6 +97,7 @@ HelpDesk/
 
 ### Login
 
+<<<<<<< HEAD
 ![Tela de Login](docs/images/login.png)
 
 ### Dashboard
@@ -114,6 +115,25 @@ HelpDesk/
 ### Gerenciamento de usuários
 
 ![Gerenciamento de Usuários](docs/images/usuarios.png)
+=======
+![Tela de Login](docs/images/Tela_de_Login.png)
+
+### Dashboard
+
+![Dashboard](docs/images/Dashboard.png)
+
+### Novo chamado
+
+![Novo Chamado](docs/images/NovoChamado.png)
+
+### Detalhes do chamado
+
+![Detalhes do Chamado](docs/images/Detalhes_do_Chamado.png)
+
+### Gerenciamento de usuários
+
+![Gerenciamento de Usuários](docs/images/Gerenciamento_de_Usuario.png)
+>>>>>>> e3a47b02b0c6e085794872402fc3a1bd1855ab91
 
 ## Como executar o projeto
 
@@ -261,4 +281,8 @@ O deploy da aplicação poderá ser realizado futuramente.
 
 ## Autor
 
+<<<<<<< HEAD
 Desenvolvido por **Vitor Caixe** como projeto pessoal de estudo e portfólio.
+=======
+Desenvolvido por **Vitor Caixe** como projeto pessoal de estudo e portfólio.
+>>>>>>> e3a47b02b0c6e085794872402fc3a1bd1855ab91
