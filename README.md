@@ -133,7 +133,6 @@ HelpDesk/
 ### Gerenciamento de usuários
 
 ![Gerenciamento de Usuários](docs/images/Gerenciamento_de_Usuario.png)
->>>>>>> e3a47b02b0c6e085794872402fc3a1bd1855ab91
 
 ## Como executar o projeto
 
