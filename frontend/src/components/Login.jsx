@@ -1,103 +1,165 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Login.css'
 
+function Login() {
+  const navigate = useNavigate()
 
-function Login () {
-    
-    const [email, setEmail] = useState('')
-    const [senha, setSenha] = useState('')
-    const [erro, setErro] = useState('')
-    const [sucesso, setSucesso] =useState('')
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+  const [erro, setErro] = useState('')
 
-    const navigate = useNavigate()
+  const [mostrarSenha, setMostrarSenha] = useState(false)
+  const [entrando, setEntrando] = useState(false)
 
-    async function handleLogin(event) {
-        event.preventDefault()
+  async function handleLogin(event) {
+    event.preventDefault()
 
-        if(email === '' || senha === '') {
-            setErro("Preencha todos os campos")
-            setSucesso('')
-            return
-        }
-        if (!email.includes('@')) {
-            setErro("Digite um email válido")
-            setSucesso('')
-            return
-        }
-        if (senha.length < 6) {
-            setErro("Precisa ter 6 ou mais caracteries")
-            setSucesso('')
-            return
-        }
-        try{
-            const response = await fetch('http://localhost:3000/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email,
-                    senha
-                })
-            })
-            const data = await response.json()
-            if(!response.ok) {
-                setErro(data.mensagem)
-                setSucesso('')
-                return
-            }
+    setErro('')
 
-        setErro('')
-        setSucesso(data.mensagem)
-        localStorage.setItem('token', data.token)
-        navigate('/dashboard')
-    } catch (erro) {
-console.error(erro)
-
-        setErro('Não foi possivel conectar ao servidor')
-        setSucesso('')
+    if (!email || !senha) {
+      setErro('Preencha o email e a senha')
+      return
     }
-}
 
+    if (!email.includes('@')) {
+      setErro('Informe um email válido')
+      return
+    }
 
+    if (senha.length < 6) {
+      setErro('A senha deve possuir pelo menos 6 caracteres')
+      return
+    }
 
-    return (
-    <>
-        <div className="login-container">
+    try {
+      setEntrando(true)
 
-            <form className="login-form" onSubmit={handleLogin}>
+      const response = await fetch(
+        'http://localhost:3000/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
 
-                <h1 className='login-title'>HelpDesk</h1>
-                <p className='login-subtitle'>Sistema de chamados de TI</p>
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    />
-                </div>
+          body: JSON.stringify({
+            email,
+            senha
+          })
+        }
+      )
 
-                <div className='form-group'>
-                    <label htmlFor="senha">Senha</label>
-                    <input
-                    id="senha"
-                    type="password"
-                    value={senha}
-                    onChange={(event) => setSenha(event.target.value)}
-                    />
-                </div>
+      const data = await response.json()
 
-                <button type="submit">Entrar</button>
+      if (!response.ok) {
+        setErro(
+          data.mensagem ||
+          'Não foi possível realizar o login'
+        )
+        return
+      }
 
-                {erro && <p className='login-error'>{erro}</p>}
-                {sucesso && <p className='login-success'>{sucesso}</p>}
-            </form>
+      localStorage.setItem('token', data.token)
+
+      navigate('/dashboard')
+    } catch (erro) {
+      console.error(erro)
+
+      setErro(
+        'Não foi possível conectar ao servidor'
+      )
+    } finally {
+      setEntrando(false)
+    }
+  }
+
+  return (
+    <div className="login-page">
+
+      <div className="login-card">
+
+        <div className="login-logo">
+
+          <h1>HelpDesk</h1>
+
+          <p>
+            Entre para acessar o sistema
+          </p>
+
         </div>
-    </>
-    )
+
+        <form
+          className="login-form"
+          onSubmit={handleLogin}
+        >
+
+          <div className="login-grupo">
+
+            <label>Email</label>
+
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
+            />
+
+          </div>
+
+          <div className="login-grupo">
+
+            <label>Senha</label>
+
+            <div className="login-senha-container">
+
+              <input
+                type={mostrarSenha ? 'text' : 'password'}
+                placeholder="Digite sua senha"
+                value={senha}
+                onChange={(event) =>
+                  setSenha(event.target.value)
+                }
+              />
+
+              <button
+                type="button"
+                className="login-mostrar-senha"
+                onClick={() =>
+                  setMostrarSenha(!mostrarSenha)
+                }
+              >
+                {mostrarSenha ? 'Ocultar' : 'Mostrar'}
+              </button>
+
+            </div>
+
+          </div>
+
+          {erro && (
+            <p className="login-erro">
+              {erro}
+            </p>
+          )}
+
+          <button
+            className="login-botao"
+            type="submit"
+            disabled={entrando}
+          >
+            {entrando
+              ? 'Entrando...'
+              : 'Entrar'}
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+  )
 }
 
 export default Login

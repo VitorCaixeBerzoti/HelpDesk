@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './NovoChamado.css'
 
 function NovoChamado() {
   const navigate = useNavigate()
@@ -53,63 +54,105 @@ function NovoChamado() {
   }
 
   return (
-    <div>
-      <button onClick={() => navigate('/dashboard')}>
-        Voltar
-      </button>
-
-      <h1>Novo chamado</h1>
-
-      <form onSubmit={handleSubmit}>
-
-        <input
-          type="text"
-          placeholder="Título do chamado"
-          value={titulo}
-          onChange={(event) => setTitulo(event.target.value)}
-        />
-
-        <textarea
-          placeholder="Descreva o problema"
-          value={descricao}
-          onChange={(event) => setDescricao(event.target.value)}
-        />
-
-        <select
-          value={tipoAjuda}
-          onChange={(event) => setTipoAjuda(event.target.value)}
-        >
-          <option value="">
-            Selecione o tipo de ajuda
-          </option>
-
-          <option value="Hardware">
-            Hardware
-          </option>
-
-          <option value="Software">
-            Software
-          </option>
-
-          <option value="Rede">
-            Rede
-          </option>
-
-          <option value="Outro">
-            Outro
-          </option>
-        </select>
-
-        {erro && <p>{erro}</p>}
+    <div className="novo-chamado">
+      <div className="novo-chamado-container">
 
         <button
-          type="submit"
-          disabled={enviando}
+          className="novo-chamado-voltar"
+          onClick={() => navigate('/dashboard')}
         >
-          {enviando ? 'Criando...' : 'Criar chamado'}
+          ← Voltar para o Dashboard
         </button>
 
-      </form>
+        <div className="novo-chamado-card">
+
+          <h1>Novo chamado</h1>
+
+          <p className="novo-chamado-subtitulo">
+            Descreva o problema para abrir uma nova solicitação.
+          </p>
+
+          <form
+            className="novo-chamado-form"
+            onSubmit={handleSubmit}
+          >
+
+            <div className="form-grupo">
+              <label>Título</label>
+
+              <input
+                type="text"
+                placeholder="Ex: Computador não liga"
+                value={titulo}
+                onChange={(event) =>
+                  setTitulo(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="form-grupo">
+              <label>Descrição</label>
+
+              <textarea
+                placeholder="Descreva o problema com mais detalhes..."
+                value={descricao}
+                onChange={(event) =>
+                  setDescricao(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="form-grupo">
+              <label>Tipo de ajuda</label>
+
+              <select
+                value={tipoAjuda}
+                onChange={(event) =>
+                  setTipoAjuda(event.target.value)
+                }
+              >
+                <option value="">
+                  Selecione uma opção
+                </option>
+
+                <option value="Hardware">
+                  Hardware
+                </option>
+
+                <option value="Software">
+                  Software
+                </option>
+
+                <option value="Rede">
+                  Rede
+                </option>
+
+                <option value="Outro">
+                  Outro
+                </option>
+              </select>
+            </div>
+
+            {erro && (
+              <p className="novo-chamado-erro">
+                {erro}
+              </p>
+            )}
+
+            <button
+              className="novo-chamado-submit"
+              type="submit"
+              disabled={enviando}
+            >
+              {enviando
+                ? 'Criando chamado...'
+                : 'Criar chamado'}
+            </button>
+
+          </form>
+        </div>
+
+      </div>
     </div>
   )
 }

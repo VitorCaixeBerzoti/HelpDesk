@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './Usuarios.css'
 
 function Usuarios() {
   const navigate = useNavigate()
@@ -36,14 +37,19 @@ function Usuarios() {
       const data = await response.json()
 
       if (!response.ok) {
-        setErro(data.mensagem || 'Erro ao carregar usuários')
+        setErro(
+          data.mensagem ||
+          'Erro ao carregar usuários'
+        )
         return
       }
 
       setUsuarios(data.usuarios || [])
     } catch (erro) {
       console.error(erro)
-      setErro('Não foi possível carregar os usuários')
+      setErro(
+        'Não foi possível carregar os usuários'
+      )
     } finally {
       setCarregando(false)
     }
@@ -83,7 +89,10 @@ function Usuarios() {
       const data = await response.json()
 
       if (!response.ok) {
-        setErro(data.mensagem || 'Erro ao criar usuário')
+        setErro(
+          data.mensagem ||
+          'Erro ao criar usuário'
+        )
         return
       }
 
@@ -97,96 +106,179 @@ function Usuarios() {
       await buscarUsuarios()
     } catch (erro) {
       console.error(erro)
-      setErro('Não foi possível criar o usuário')
+      setErro(
+        'Não foi possível criar o usuário'
+      )
     } finally {
       setEnviando(false)
     }
   }
 
+  function traduzirCargo(cargo) {
+    if (cargo === 'ADMIN') {
+      return 'Administrador'
+    }
+
+    if (cargo === 'TECNICO') {
+      return 'Técnico'
+    }
+
+    return 'Usuário'
+  }
+
   return (
-    <div>
-
-      <button onClick={() => navigate('/dashboard')}>
-        Voltar
-      </button>
-
-      <h1>Usuários</h1>
-
-      <form onSubmit={handleCriarUsuario}>
-
-        <input
-          type="text"
-          placeholder="Nome"
-          value={nome}
-          onChange={(event) => setNome(event.target.value)}
-        />
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(event) => setSenha(event.target.value)}
-        />
-
-        <select
-          value={cargo}
-          onChange={(event) => setCargo(event.target.value)}
-        >
-          <option value="USUARIO">
-            Usuário
-          </option>
-
-          <option value="TECNICO">
-            Técnico
-          </option>
-
-          <option value="ADMIN">
-            Administrador
-          </option>
-        </select>
+    <div className="usuarios">
+      <div className="usuarios-container">
 
         <button
-          type="submit"
-          disabled={enviando}
+          className="usuarios-voltar"
+          onClick={() => navigate('/dashboard')}
         >
-          {enviando ? 'Criando...' : 'Criar usuário'}
+          ← Voltar para o Dashboard
         </button>
 
-      </form>
+        <div className="usuarios-header">
+          <h1>Gerenciamento de usuários</h1>
 
-      {erro && <p>{erro}</p>}
-      {sucesso && <p>{sucesso}</p>}
+          <p>
+            Cadastre e visualize os usuários do sistema.
+          </p>
+        </div>
 
-      <h2>Usuários cadastrados</h2>
+        <div className="usuarios-card">
 
-      {carregando && (
-        <p>Carregando usuários...</p>
-      )}
+          <h2>Novo usuário</h2>
 
-      {!carregando && usuarios.length === 0 && (
-        <p>Nenhum usuário cadastrado.</p>
-      )}
+          <form
+            className="usuarios-form"
+            onSubmit={handleCriarUsuario}
+          >
 
-      {!carregando &&
-        usuarios.map((usuario) => (
-          <div key={usuario.id}>
-            <strong>{usuario.nome}</strong>
+            <div className="usuarios-form-grupo">
+              <label>Nome</label>
 
-            <p>{usuario.email}</p>
+              <input
+                type="text"
+                placeholder="Nome completo"
+                value={nome}
+                onChange={(event) =>
+                  setNome(event.target.value)
+                }
+              />
+            </div>
 
-            <p>
-              Cargo: {usuario.cargo}
+            <div className="usuarios-form-grupo">
+              <label>Email</label>
+
+              <input
+                type="email"
+                placeholder="usuario@email.com"
+                value={email}
+                onChange={(event) =>
+                  setEmail(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="usuarios-form-grupo">
+              <label>Senha</label>
+
+              <input
+                type="password"
+                placeholder="Senha do usuário"
+                value={senha}
+                onChange={(event) =>
+                  setSenha(event.target.value)
+                }
+              />
+            </div>
+
+            <div className="usuarios-form-grupo">
+              <label>Cargo</label>
+
+              <select
+                value={cargo}
+                onChange={(event) =>
+                  setCargo(event.target.value)
+                }
+              >
+                <option value="USUARIO">
+                  Usuário
+                </option>
+
+                <option value="TECNICO">
+                  Técnico
+                </option>
+
+                <option value="ADMIN">
+                  Administrador
+                </option>
+              </select>
+            </div>
+
+            <button
+              className="usuarios-form-botao"
+              type="submit"
+              disabled={enviando}
+            >
+              {enviando
+                ? 'Criando usuário...'
+                : 'Criar usuário'}
+            </button>
+
+          </form>
+
+          {erro && (
+            <p className="usuarios-erro">
+              {erro}
             </p>
-          </div>
-        ))}
+          )}
 
+          {sucesso && (
+            <p className="usuarios-sucesso">
+              {sucesso}
+            </p>
+          )}
+
+        </div>
+
+        <h2>Usuários cadastrados</h2>
+
+        {carregando && (
+          <p>Carregando usuários...</p>
+        )}
+
+        {!carregando && usuarios.length === 0 && (
+          <p>Nenhum usuário cadastrado.</p>
+        )}
+
+        <div className="usuarios-lista">
+
+          {!carregando &&
+            usuarios.map((usuario) => (
+              <div
+                className="usuario-item"
+                key={usuario.id}
+              >
+
+                <div className="usuario-item-topo">
+
+                  <h3>{usuario.nome}</h3>
+
+                  <span className="usuario-cargo">
+                    {traduzirCargo(usuario.cargo)}
+                  </span>
+
+                </div>
+
+                <p>{usuario.email}</p>
+
+              </div>
+            ))}
+
+        </div>
+
+      </div>
     </div>
   )
 }

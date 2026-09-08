@@ -22,24 +22,31 @@ function Dashboard() {
 
         const token = localStorage.getItem('token')
 
-        const response = await fetch('http://localhost:3000/chamados', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await fetch(
+          'http://localhost:3000/chamados',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        })
+        )
 
         const data = await response.json()
 
         if (!response.ok) {
-          setErro(data.mensagem || 'Erro ao carregar chamados')
-          setChamados([])
+          setErro(
+            data.mensagem ||
+            'Erro ao carregar chamados'
+          )
           return
         }
 
         setChamados(data.chamados || [])
       } catch (erro) {
         console.error(erro)
-        setErro('Não foi possível carregar os chamados')
+        setErro(
+          'Não foi possível carregar os chamados'
+        )
       } finally {
         setCarregando(false)
       }
@@ -49,11 +56,14 @@ function Dashboard() {
       try {
         const token = localStorage.getItem('token')
 
-        const response = await fetch('http://localhost:3000/perfil', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await fetch(
+          'http://localhost:3000/perfil',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        })
+        )
 
         const data = await response.json()
 
@@ -74,18 +84,60 @@ function Dashboard() {
     navigate('/login')
   }
 
-  const chamadosFiltrados = chamados.filter((chamado) => {
-    const combinaStatus =
-      filtroStatus === 'TODOS' || chamado.status === filtroStatus
+  function classeStatus(status) {
+    if (status === 'ABERTO') {
+      return 'status status-aberto'
+    }
 
-    const combinaTipo =
-      filtroTipo === 'TODOS' || chamado.tipoAjuda === filtroTipo
+    if (status === 'FECHADO') {
+      return 'status status-fechado'
+    }
 
-    const combinaBusca =
-      chamado.titulo.toLowerCase().includes(busca.toLowerCase())
+    if (status === 'CONCLUIDO') {
+      return 'status status-concluido'
+    }
 
-    return combinaStatus && combinaTipo && combinaBusca
-  })
+    return 'status'
+  }
+
+  function traduzirStatus(status) {
+    if (status === 'ABERTO') {
+      return 'Aberto'
+    }
+
+    if (status === 'FECHADO') {
+      return 'Fechado'
+    }
+
+    if (status === 'CONCLUIDO') {
+      return 'Concluído'
+    }
+
+    return status
+  }
+
+  const chamadosFiltrados = chamados.filter(
+    (chamado) => {
+      const combinaStatus =
+        filtroStatus === 'TODOS' ||
+        chamado.status === filtroStatus
+
+      const combinaTipo =
+        filtroTipo === 'TODOS' ||
+        chamado.tipoAjuda === filtroTipo
+
+      const combinaBusca =
+        chamado.titulo
+          .toLowerCase()
+          .includes(busca.toLowerCase())
+
+      return (
+        combinaStatus &&
+        combinaTipo &&
+        combinaBusca
+      )
+    }
+  )
 
   const totalChamados = chamados.length
 
@@ -98,142 +150,277 @@ function Dashboard() {
   ).length
 
   const totalConcluidos = chamados.filter(
-    (chamado) => chamado.status === 'CONCLUIDO'
+    (chamado) =>
+      chamado.status === 'CONCLUIDO'
   ).length
 
   return (
     <div className="dashboard">
 
       <div className="dashboard-header">
-        <div>
-          <h1>Dashboard</h1>
-          <p>Bem-vindo ao HelpDesk</p>
-        </div>
 
         <div>
-          <button onClick={() => navigate('/chamados/novo')}>
-            Novo chamado
+          <h1>HelpDesk</h1>
+
+          <p>
+            Gerencie e acompanhe suas solicitações
+          </p>
+        </div>
+
+        <div className="dashboard-acoes">
+
+          <button
+            className="botao botao-principal"
+            onClick={() =>
+              navigate('/chamados/novo')
+            }
+          >
+            + Novo chamado
           </button>
 
           {usuario?.cargo === 'ADMIN' && (
-            <button onClick={() => navigate('/usuarios')}>
+            <button
+              className="botao botao-secundario"
+              onClick={() =>
+                navigate('/usuarios')
+              }
+            >
               Gerenciar usuários
             </button>
           )}
 
-          <button onClick={handleLogout}>
+          <button
+            className="botao botao-sair"
+            onClick={handleLogout}
+          >
             Sair
           </button>
+
         </div>
+
       </div>
 
       <div className="dashboard-resumo">
-        <div>
-          <strong>{totalChamados}</strong>
+
+        <div className="resumo-card">
           <span>Total</span>
+          <strong>{totalChamados}</strong>
         </div>
 
-        <div>
-          <strong>{totalAbertos}</strong>
+        <div className="resumo-card">
           <span>Abertos</span>
+          <strong>{totalAbertos}</strong>
         </div>
 
-        <div>
-          <strong>{totalFechados}</strong>
+        <div className="resumo-card">
           <span>Fechados</span>
+          <strong>{totalFechados}</strong>
         </div>
 
-        <div>
-          <strong>{totalConcluidos}</strong>
+        <div className="resumo-card">
           <span>Concluídos</span>
+          <strong>{totalConcluidos}</strong>
         </div>
+
       </div>
 
-      <h2>Chamados</h2>
+      <div className="dashboard-conteudo">
 
-      <div className="dashboard-filtros">
-        <input
-          type="text"
-          placeholder="Buscar chamado..."
-          value={busca}
-          onChange={(event) => setBusca(event.target.value)}
-        />
-
-        <select
-          value={filtroStatus}
-          onChange={(event) => setFiltroStatus(event.target.value)}
-        >
-          <option value="TODOS">Todos os status</option>
-          <option value="ABERTO">Abertos</option>
-          <option value="FECHADO">Fechados</option>
-          <option value="CONCLUIDO">Concluídos</option>
-        </select>
-
-        <select
-          value={filtroTipo}
-          onChange={(event) => setFiltroTipo(event.target.value)}
-        >
-          <option value="TODOS">Todos os tipos</option>
-          <option value="Hardware">Hardware</option>
-          <option value="Software">Software</option>
-          <option value="Rede">Rede</option>
-          <option value="Outro">Outro</option>
-        </select>
-      </div>
-
-      {carregando && (
-        <p>Carregando chamados...</p>
-      )}
-
-      {erro && (
-        <p>{erro}</p>
-      )}
-
-      {!carregando && !erro && chamados.length === 0 && (
-        <p>Nenhum chamado encontrado.</p>
-      )}
-
-      {!carregando &&
-        !erro &&
-        chamados.length > 0 &&
-        chamadosFiltrados.length === 0 && (
-          <p>Nenhum chamado corresponde aos filtros.</p>
-        )}
-
-      {!carregando &&
-        !erro &&
-        chamadosFiltrados.map((chamado) => (
-          <div
-            className="chamado-card"
-            key={chamado.id}
-            onClick={() => navigate(`/chamados/${chamado.id}`)}
-          >
-            <h3>{chamado.titulo}</h3>
-
-            <p>{chamado.descricao}</p>
+        <div className="dashboard-titulo-lista">
+          <div>
+            <h2>Chamados</h2>
 
             <p>
-              Solicitante: {chamado.usuario?.nome || 'Não informado'}
-            </p>
-
-            <p>
-              Técnico: {chamado.tecnico?.nome || 'Não atribuído'}
-            </p>
-
-            <p>
-              Tipo: {chamado.tipoAjuda}
-            </p>
-
-            <p>
-              Status: {chamado.status}
-            </p>
-
-            <p>
-              Criado em:{' '}
-              {new Date(chamado.dataDeCriacao).toLocaleString('pt-BR')}
+              Acompanhe as solicitações registradas
             </p>
           </div>
-        ))}
+        </div>
+
+        <div className="dashboard-filtros">
+
+          <input
+            type="text"
+            placeholder="Buscar pelo título..."
+            value={busca}
+            onChange={(event) =>
+              setBusca(event.target.value)
+            }
+          />
+
+          <select
+            value={filtroStatus}
+            onChange={(event) =>
+              setFiltroStatus(
+                event.target.value
+              )
+            }
+          >
+            <option value="TODOS">
+              Todos os status
+            </option>
+
+            <option value="ABERTO">
+              Abertos
+            </option>
+
+            <option value="FECHADO">
+              Fechados
+            </option>
+
+            <option value="CONCLUIDO">
+              Concluídos
+            </option>
+          </select>
+
+          <select
+            value={filtroTipo}
+            onChange={(event) =>
+              setFiltroTipo(
+                event.target.value
+              )
+            }
+          >
+            <option value="TODOS">
+              Todos os tipos
+            </option>
+
+            <option value="Hardware">
+              Hardware
+            </option>
+
+            <option value="Software">
+              Software
+            </option>
+
+            <option value="Rede">
+              Rede
+            </option>
+
+            <option value="Outro">
+              Outro
+            </option>
+          </select>
+
+        </div>
+
+        {carregando && (
+          <p className="dashboard-mensagem">
+            Carregando chamados...
+          </p>
+        )}
+
+        {erro && (
+          <p className="dashboard-erro">
+            {erro}
+          </p>
+        )}
+
+        {!carregando &&
+          !erro &&
+          chamados.length === 0 && (
+            <p className="dashboard-mensagem">
+              Nenhum chamado encontrado.
+            </p>
+          )}
+
+        {!carregando &&
+          !erro &&
+          chamados.length > 0 &&
+          chamadosFiltrados.length === 0 && (
+            <p className="dashboard-mensagem">
+              Nenhum chamado corresponde aos filtros.
+            </p>
+          )}
+
+        <div className="chamados-lista">
+
+          {!carregando &&
+            !erro &&
+            chamadosFiltrados.map(
+              (chamado) => (
+                <div
+                  className="chamado-card"
+                  key={chamado.id}
+                  onClick={() =>
+                    navigate(
+                      `/chamados/${chamado.id}`
+                    )
+                  }
+                >
+
+                  <div className="chamado-topo">
+
+                    <div>
+                      <span className="chamado-id">
+                        Chamado #{chamado.id}
+                      </span>
+
+                      <h3>
+                        {chamado.titulo}
+                      </h3>
+                    </div>
+
+                    <span
+                      className={classeStatus(
+                        chamado.status
+                      )}
+                    >
+                      {traduzirStatus(
+                        chamado.status
+                      )}
+                    </span>
+
+                  </div>
+
+                  <p className="chamado-descricao">
+                    {chamado.descricao}
+                  </p>
+
+                  <div className="chamado-informacoes">
+
+                    <div>
+                      <span>Solicitante</span>
+                      <strong>
+                        {chamado.usuario?.nome ||
+                          'Não informado'}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Técnico</span>
+                      <strong>
+                        {chamado.tecnico?.nome ||
+                          'Não atribuído'}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Tipo</span>
+                      <strong>
+                        {chamado.tipoAjuda}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Criado em</span>
+                      <strong>
+                        {new Date(
+                          chamado.dataDeCriacao
+                        ).toLocaleString(
+                          'pt-BR'
+                        )}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+        </div>
+
+      </div>
 
     </div>
   )
