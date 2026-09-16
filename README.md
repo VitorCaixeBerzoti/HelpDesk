@@ -279,9 +279,4 @@ O sistema está funcional para execução local.
 O deploy da aplicação poderá ser realizado futuramente.
 
 ## Autor
-
-<<<<<<< HEAD
 Desenvolvido por **Vitor Caixe** como projeto pessoal de estudo e portfólio.
-=======
-Desenvolvido por **Vitor Caixe** como projeto pessoal de estudo e portfólio.
->>>>>>> e3a47b02b0c6e085794872402fc3a1bd1855ab91
