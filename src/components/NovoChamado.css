@@ -1,0 +1,125 @@
+.novo-chamado {
+    min-height: 100vh;
+    background: var(--cor-fundo);
+    padding: 32px 24px;
+}
+
+.novo-chamado-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.novo-chamado-voltar {
+    border: none;
+    background: transparent;
+    color: var(--cor-primaria);
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.novo-chamado-voltar:hover {
+    text-decoration: underline;
+}
+
+.novo-chamado-card h1 {
+    margin: 0 0 8px;
+    color: var(--cor-texto);
+}
+
+.novo-chamado-subtitulo {
+    margin: 0 0 28px;
+    color: var(--cor-texto-secundario);
+}
+
+.novo-chamado-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-grupo {
+    font-weight: 600;
+    color: var(--cor-texto);
+}
+
+.form-grupo input,
+.form-grupo textarea,
+.form-grupo select {
+    width: 100%;
+    padding: 12px 14px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+
+    outline: none;
+    background: var(--cor-superficie);
+
+    transition: 0.2s;
+}
+
+.form-grupo textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.form-grupo input:focus,
+.form-grupo textarea:focus,
+.form-grupo select:focus {
+    border-color: var(--cor-primaria);
+    outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
+.novo-chamado-erro {
+    margin: 0;
+    padding: 10px 12px;
+
+    background: var(--cor-erro-fundo);
+    color: var(--cor-erro);
+
+    border-radius: 8px;
+}
+
+.novo-chamado-submit {
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 18px;
+
+    background: var(--cor-primaria);
+    color: var(--cor-texto-botao);
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.novo-chamado-submit:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.novo-chamado-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .novo-chamado {
+        padding: 20px 14px;
+    }
+
+    .novo-chamado-card {
+        padding: 22px 18px;
+    }
+}

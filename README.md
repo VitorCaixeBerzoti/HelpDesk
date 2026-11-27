@@ -1,282 +1,157 @@
-# HelpDesk
+﻿# HelpDesk
 
-Sistema de HelpDesk desenvolvido como projeto pessoal para praticar o desenvolvimento de uma aplicação Full Stack, trabalhando desde a interface até autenticação, API REST e banco de dados.
+Sistema de suporte desenvolvido por **Vitor Caixe**, com React, Express, PostgreSQL e Prisma. Usuários abrem e acompanham solicitações; técnicos e administradores atendem os chamados. A interface inclui quadro por status e temas claro e escuro.
 
-A aplicação permite que usuários criem e acompanhem solicitações de suporte, enquanto técnicos e administradores possuem acesso ao gerenciamento dos chamados.
+O projeto agora possui uma única instalação de dependências e um único arquivo de configuração na raiz. A API e a interface são entregues pelo mesmo servidor no Docker.
 
-## Funcionalidades
+## Subir tudo com Docker
 
-### Autenticação
-- Login com email e senha
-- Autenticação utilizando JWT
-- Senhas armazenadas com hash utilizando bcrypt
-- Rotas protegidas para usuários autenticados
+Com o Docker Desktop aberto e usando contêineres Linux, execute na pasta do projeto:
 
-### Chamados
-- Criação de novos chamados
-- Listagem dos chamados
-- Visualização dos detalhes de cada chamado
-- Busca por título
-- Filtro por status
-- Filtro por tipo de ajuda
-- Acompanhamento do técnico responsável
-- Atualização do status do chamado
-- Registro da solução
-- Técnico pode assumir um chamado
+```bash
+docker compose up --build -d
+```
 
-### Níveis de acesso
+Acesse **http://localhost:8081**. O primeiro build demora mais porque baixa as imagens e instala as dependências.
 
-O sistema possui três tipos de usuário:
+O Compose inicia o PostgreSQL, aguarda sua disponibilidade, aplica as migrations, cria o administrador se ele ainda não existir e inicia a aplicação. Os chamados e usuários ficam em um volume persistente. O PostgreSQL já instalado no Windows não é utilizado nem alterado.
 
-**Usuário**
-- Cria chamados
-- Visualiza seus próprios chamados
-- Acompanha status e solução
+### Login inicial
 
-**Técnico**
-- Visualiza os chamados
-- Pode assumir chamados
-- Atualiza status
-- Registra a solução
+Se existir `.env`, o administrador será criado com os valores `SEED_ADMIN_EMAIL` e `SEED_ADMIN_SENHA` desse arquivo. A configuração local anterior foi preservada nessas variáveis.
 
-**Administrador**
-- Possui acesso aos chamados
-- Pode gerenciar chamados
-- Visualiza usuários cadastrados
-- Cadastra novos usuários
-- Define o cargo dos novos usuários
+Em uma cópia nova, sem `.env`, os padrões para uso local são:
 
-## Tecnologias utilizadas
+- E-mail: `admin@helpdesk.local`
+- Senha: `helpdesk123`
 
-### Frontend
-- React
-- JavaScript
-- Vite
-- React Router
-- CSS
+Para personalizar antes da primeira inicialização, copie `.env.example` para `.env` e edite seus valores. No PowerShell:
 
-### Backend
-- Node.js
-- Express
-- JWT
-- bcrypt
-- CORS
+```powershell
+Copy-Item .env.example .env
+```
 
-### Banco de dados
-- PostgreSQL
-- Prisma ORM
+Não sobrescreva seu `.env` se ele já existir. Nunca envie esse arquivo ao Git. As credenciais padrão são destinadas ao ambiente local, que é publicado apenas em `127.0.0.1`.
 
-## Estrutura do projeto
+O seed não redefine senhas de usuários existentes. Alterar `SEED_ADMIN_SENHA` após o primeiro cadastro não muda a senha salva no banco. Da mesma forma, alterar `POSTGRES_PASSWORD` não redefine automaticamente a senha de um volume já inicializado.
+
+### Comandos úteis
+
+```bash
+# Estado e saúde dos serviços
+docker compose ps
+
+# Acompanhar mensagens da aplicação
+docker compose logs -f app
+
+# Parar sem apagar os dados
+docker compose down
+
+# Aplicar alterações de código à versão Docker
+docker compose up --build -d
+```
+
+Não use `docker compose down -v` para uma parada normal: a opção `-v` remove o volume com os dados.
+
+### Portas
+
+| Serviço | Endereço |
+| --- | --- |
+| Sistema completo | http://localhost:8081 |
+| Verificação de saúde da API | http://localhost:8081/api/health |
+| PostgreSQL do Docker para ferramentas locais | localhost:15432 |
+
+`APP_PORT` e `DB_PORT` no `.env` permitem trocar as portas externas. A API usa `/api` no mesmo endereço da interface. Dentro do Compose, a aplicação conecta ao serviço `db`; fora do Docker, `DATABASE_URL` aponta para `localhost:15432`.
+
+O banco Docker começa separado do banco anterior. Dados antigos não são importados automaticamente.
+
+## Desenvolver com atualização automática
+
+Requer Node.js 24 e Docker Desktop. Todos os comandos são executados na raiz:
+
+```bash
+npm ci
+docker compose up -d db
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+npm run dev
+```
+
+Esse modo usa o `.env`; crie-o a partir do exemplo caso ainda não exista. O valor de `DATABASE_URL` deve conter a mesma senha de `POSTGRES_PASSWORD` e a porta publicada em `DB_PORT`. Se a senha tiver caracteres reservados de URL, codifique-os na `DATABASE_URL`.
+
+Abra **http://localhost:5173**. Um único comando inicia Vite e Express; Vite encaminha `/api` para o servidor na porta `PORT` (padrão 3000). `Ctrl+C` encerra os dois processos. Para desenvolvimento sem Docker, configure `DATABASE_URL` para um PostgreSQL acessível.
+
+Para testar o build local:
+
+```bash
+npm run build
+npm start
+```
+
+Abra **http://localhost:3000**. O banco precisa estar disponível e as migrations aplicadas. Esse comando não cria nem redefine usuários automaticamente.
+
+## Estrutura
 
 ```text
 HelpDesk/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── config/
-│   │   └── App.jsx
-│   └── package.json
-│
-├── backend/
-│   ├── prisma/
-│   │   ├── migrations/
-│   │   └── seed.js
-│   │
-│   ├── src/
-│   │   ├── generated/
-│   │   ├── lib/
-│   │   └── server.js
-│   │
-│   └── package.json
-│
-└── README.md
+  src/
+    components/        Telas, quadro de chamados e seletor de tema
+    config/            Endereço relativo da API
+    utils/             Preferência de tema
+    assets/            Recursos da interface
+    server/
+      server.js        API Express e entrega da interface compilada
+      lib/prisma.js    Conexão com o banco
+      generated/       Cliente gerado pelo Prisma, fora do Git
+    App.jsx            Rotas da interface
+    main.jsx           Inicialização do React
+    index.css          Estilos globais e temas
+  prisma/
+    schema.prisma      Modelos de dados
+    migrations/        Histórico do banco
+    seed.js            Administrador inicial
+  scripts/
+    dev.js             Inicialização conjunta em desenvolvimento
+    start-container.js Migrations, seed e servidor no Docker
+  public/              Arquivos públicos
+  images/              Capturas de tela do projeto
+  index.html
+  package.json
+  package-lock.json
+  prisma.config.ts
+  vite.config.js
+  eslint.config.js
+  Dockerfile
+  compose.yaml
+  .env.example
 ```
 
-## Screenshots
+Não existem mais instalações independentes em `backend` e `frontend`. O servidor permanece separado dos componentes dentro de `src/server` para que código de banco e segredos não sejam incluídos no bundle do navegador.
 
-### Login
+## Fluxos principais
 
-<<<<<<< HEAD
-![Tela de Login](docs/images/login.png)
+- Login com JWT e senhas protegidas com bcrypt.
+- Criação de chamados de Hardware, Software, Rede e Outro.
+- Quadro com Abertos, Concluídos e Fechados, busca e filtros.
+- Detalhes, atribuição de técnico e registro de solução.
+- Acesso administrativo ao cadastro de usuários.
+- Tema claro ou escuro salvo no navegador.
 
-### Dashboard
+Todos os endpoints de negócio usam o prefixo `/api`, por exemplo `/api/login`, `/api/perfil` e `/api/chamados`. O healthcheck retorna 503 se o banco estiver indisponível.
 
-![Dashboard](docs/images/dashboard.png)
-
-### Novo chamado
-
-![Novo Chamado](docs/images/novo-chamado.png)
-
-### Detalhes do chamado
-
-![Detalhes do Chamado](docs/images/detalhes-chamado.png)
-
-### Gerenciamento de usuários
-
-![Gerenciamento de Usuários](docs/images/usuarios.png)
-=======
-![Tela de Login](docs/images/Tela_de_Login.png)
-
-### Dashboard
-
-![Dashboard](docs/images/Dashboard.png)
-
-### Novo chamado
-
-![Novo Chamado](docs/images/NovoChamado.png)
-
-### Detalhes do chamado
-
-![Detalhes do Chamado](docs/images/Detalhes_do_Chamado.png)
-
-### Gerenciamento de usuários
-
-![Gerenciamento de Usuários](docs/images/Gerenciamento_de_Usuario.png)
-
-## Como executar o projeto
-
-### Pré-requisitos
-
-Antes de começar, é necessário ter instalado:
-
-- Node.js
-- PostgreSQL
-- Git
-
-### 1. Clone o repositório
+## Verificações
 
 ```bash
-git clone URL_DO_REPOSITORIO
+npm run build
+npm run lint
 ```
 
-Entre na pasta:
+Com o Compose rodando e o `.env` configurado, execute `npm run test:integration` para testar login, perfis, cadastro, visibilidade dos chamados, atribuição e conclusão. O teste cria registros temporários identificados e remove apenas esses registros ao terminar. A interface não usa dados simulados.
 
-```bash
-cd HelpDesk
-```
+Também foram corrigidas a listagem de usuários, a definição do cargo no cadastro, a leitura dos nomes nos detalhes e a autorização antes de alterar chamados. As requisições das telas de detalhes e usuários são canceladas ao desmontar os componentes.
 
-## Backend
+## Referências do ambiente Docker
 
-Entre na pasta:
-
-```bash
-cd backend
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Crie um arquivo `.env` dentro da pasta `backend`.
-
-Você pode utilizar o `.env.example` como referência:
-
-```env
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/helpdesk
-JWT_SECRET=sua_chave_secreta
-
-PORT=3000
-FRONTEND_URL=http://localhost:5173
-
-SEED_ADMIN_NOME=Administrador
-SEED_ADMIN_EMAIL=admin@email.com
-SEED_ADMIN_SENHA=sua_senha
-```
-
-Aplique as migrations:
-
-```bash
-npx prisma migrate deploy
-```
-
-Crie o usuário administrador inicial:
-
-```bash
-npx prisma db seed
-```
-
-Inicie o backend:
-
-```bash
-npm run dev
-```
-
-Por padrão, a API será executada em:
-
-```text
-http://localhost:3000
-```
-
-## Frontend
-
-Abra outro terminal e entre na pasta:
-
-```bash
-cd frontend
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Crie o arquivo `.env`:
-
-```env
-VITE_API_URL=http://localhost:3000
-```
-
-Inicie o frontend:
-
-```bash
-npm run dev
-```
-
-Por padrão, a aplicação estará disponível em:
-
-```text
-http://localhost:5173
-```
-
-## Segurança
-
-Algumas medidas utilizadas no projeto:
-
-- Hash de senhas com bcrypt
-- Autenticação através de JWT
-- Rotas protegidas no backend
-- Controle de acesso baseado no cargo do usuário
-- Identificação do usuário através do token
-- Variáveis sensíveis armazenadas em arquivos `.env`
-
-Os arquivos `.env` não são enviados ao repositório.
-
-## Objetivo do projeto
-
-O principal objetivo deste projeto foi colocar em prática conhecimentos que eu vinha estudando separadamente e entender melhor como as diferentes partes de uma aplicação Full Stack se conectam.
-
-Durante o desenvolvimento trabalhei principalmente com:
-
-- criação e consumo de API REST
-- autenticação e autorização
-- comunicação entre frontend e backend
-- modelagem e manipulação de banco de dados
-- relacionamentos utilizando Prisma
-- proteção de rotas
-- controle de acesso por tipo de usuário
-- tratamento de erros
-- organização do projeto
-- versionamento utilizando Git e GitHub
-
-## Status
-
-O sistema está funcional para execução local.
-
-O deploy da aplicação poderá ser realizado futuramente.
-
-## Autor
-Desenvolvido por **Vitor Caixe** como projeto pessoal de estudo e portfólio.
+- [Ordem de inicialização e healthchecks no Compose](https://docs.docker.com/compose/how-tos/startup-order/)
+- [Imagem oficial do PostgreSQL e volumes da versão 18](https://hub.docker.com/_/postgres)

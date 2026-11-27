@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.env
+.env.*
+.agents
+.claude
+.windsurf
+src/server/generated
+backend
+frontend
+*.log
+images
+docs
