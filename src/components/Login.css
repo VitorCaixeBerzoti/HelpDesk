@@ -1,0 +1,146 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--cor-fundo);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+
+  background: var(--cor-superficie);
+  padding: 36px;
+
+  border-radius: 16px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo h1 {
+  margin: 0;
+
+  font-size: 30px;
+  color: var(--cor-texto);
+}
+
+.login-logo p {
+  margin: 8px 0 0;
+  color: var(--cor-texto-secundario);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.login-grupo label {
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.login-grupo input {
+  width: 100%;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+.login-grupo input:focus {
+  border-color: var(--cor-primaria);
+
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
+.login-senha-container {
+  position: relative;
+}
+
+.login-senha-container input {
+  padding-right: 80px;
+}
+
+.login-mostrar-senha {
+  position: absolute;
+
+  right: 12px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  border: none;
+  background: transparent;
+
+  color: var(--cor-primaria);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.login-erro {
+  margin: 0;
+
+  padding: 11px 12px;
+
+  background: var(--cor-erro-fundo);
+  color: var(--cor-erro);
+
+  border-radius: 8px;
+}
+
+.login-botao {
+  border: none;
+
+  padding: 12px 18px;
+
+  border-radius: 8px;
+
+  background: var(--cor-primaria);
+  color: var(--cor-texto-botao);
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.login-botao:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.login-botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 28px 20px;
+  }
+}

@@ -1,0 +1,46 @@
+name: helpdesk
+
+services:
+  db:
+    image: postgres:18-bookworm
+    environment:
+      POSTGRES_USER: helpdesk
+      POSTGRES_DB: helpdesk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-helpdesk_local}
+    ports:
+      - "127.0.0.1:${DB_PORT:-15432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U helpdesk -d helpdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:${APP_PORT:-8081}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://helpdesk:${POSTGRES_PASSWORD:-helpdesk_local}@db:5432/helpdesk?schema=public
+      JWT_SECRET: ${JWT_SECRET:-helpdesk-chave-apenas-para-desenvolvimento-local}
+      SEED_ADMIN_NOME: ${SEED_ADMIN_NOME:-Administrador}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@helpdesk.local}
+      SEED_ADMIN_SENHA: ${SEED_ADMIN_SENHA:-helpdesk123}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    init: true
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
